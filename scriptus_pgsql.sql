@@ -30,7 +30,23 @@ and exists (select 1 from e where a.x1 = e.x2 and a.y1 = e.y2 and a.x2 = e.x1 an
 and concat(a.x1, a.y1) < concat(e.x1, e.y1))
 order by 1;
 
+-- route                 |distance|
+-- ----------------------|--------|
+-- p[-1,-1] -- > p[-1,-2]|    1.00|
+-- p[-1,-1] -- > p[0,0]  |    1.41|
+-- p[-1,-1] -- > p[1,1]  |    2.83|
+-- p[-1,-1] -- > p[2,3]  |    5.00|
+-- p[-1,-2] -- > p[0,0]  |    2.24|
+-- p[-1,-2] -- > p[1,1]  |    3.61|
+-- p[-1,-2] -- > p[2,3]  |    5.83|
+-- p[0,0] -- > p[1,1]    |    1.41|
+-- p[0,0] -- > p[2,3]    |    3.61|
+-- p[1,1] -- > p[2,3]    |    2.24|
 
+
+
+-- ********************************************************************************************* --
+-- ********************************************************************************************* --
 
 -- A "quite" student is the one who took at least one exam and didn't score neither the high score nor the low score.
 -- Write an SQL query to report the students (student_id, student_name) being "quiet" in ALL exams.
@@ -94,3 +110,10 @@ select distinct student_id,
 case when max(score) over (partition by student_id) < max(score) over ()
 and min(score) over (partition by student_id) > min(score) over () then true else false end silent from exams) b
 where a.student_id = b.student_id and b.silent order by 1;
+
+-- student_id|student_name|
+-- ----------|------------|
+--          2|Jade        |
+--          3|Stella      |
+         
+     
