@@ -20,19 +20,18 @@ with t as (
 	select 0, 0 union all
 	select -1, -2
 ), e as (
-	select a.x x1, a.y y1, b.x x2, b.y y2 from t a cross join t b
+	select a.x x1, a.y y1, b.x x2, b.y y2, concat('p[', a.x, ',',a.y,'] --> p[', b.x, ',', b.y, ']') route,
+	round(sqrt(power(b.x - a.x, 2) + power(b.y - a.y, 2))::numeric, 2) distance from t a cross join t b
+	where (a.x != b.x or a.y != b.y)
 )
-select concat('p[', x1, ',',y1,'] -- > p[', x2, ',', y2, ']') route,
-round(sqrt(power(x2 - x1, 2) + power(y2 - y1, 2))::numeric, 2) distance from e a where (x1 != x2 or y1 != y2)
-and exists (select 1 from e where a.x1 = e.x2 and a.y1 = e.y2 and a.x2 = e.x1 and a.y2 = e.y1
-and concat(a.x1, a.y1) < concat(e.x1, e.y1))
+select route, distance from e a where exists (select 1 from e where a.x1 = e.x2 and a.y1 = e.y2 and a.x2 = e.x1 and a.y2 = e.y1
+and (a.x1 < e.x1 or a.x1 = e.x1 and a.y1 < e.y1))
+and distance in (select min(distance) from e)
 order by 1;
 
--- route                 |distance|
--- ----------------------|--------|
--- p[-1,-1] -- > p[-1,-2]|    1.00|
--- p[-1,-1] -- > p[0,0]  |    1.41|
--- p[-1,-2] -- > p[0,0]  |    2.24|
+-- route                |distance|
+-- ---------------------|--------|
+-- p[-1,-2] --> p[-1,-1]|    1.00|
 
 
 
