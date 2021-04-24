@@ -18,8 +18,6 @@
 with t as (
 	select -1 x, -1 y union all
 	select 0, 0 union all
-	select 1, 1 union all
-	select 2, 3 union all
 	select -1, -2
 ), e as (
 	select a.x x1, a.y y1, b.x x2, b.y y2 from t a cross join t b
@@ -34,14 +32,7 @@ order by 1;
 -- ----------------------|--------|
 -- p[-1,-1] -- > p[-1,-2]|    1.00|
 -- p[-1,-1] -- > p[0,0]  |    1.41|
--- p[-1,-1] -- > p[1,1]  |    2.83|
--- p[-1,-1] -- > p[2,3]  |    5.00|
 -- p[-1,-2] -- > p[0,0]  |    2.24|
--- p[-1,-2] -- > p[1,1]  |    3.61|
--- p[-1,-2] -- > p[2,3]  |    5.83|
--- p[0,0] -- > p[1,1]    |    1.41|
--- p[0,0] -- > p[2,3]    |    3.61|
--- p[1,1] -- > p[2,3]    |    2.24|
 
 
 
@@ -96,7 +87,7 @@ with students as (
 ), exams as (
 	select 10 exam_id, 1 student_id, 70 score union all
 	select 10, 2, 80 union all
-	select 10, 3, 80 union all
+	select 10, 3, 90 union all
 	select 20, 1, 80 union all
 	select 30, 1, 70 union all
 	select 30, 3, 80 union all
@@ -114,6 +105,3 @@ where a.student_id = b.student_id and b.silent order by 1;
 -- student_id|student_name|
 -- ----------|------------|
 --          2|Jade        |
---          3|Stella      |
-         
-     
