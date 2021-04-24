@@ -35,6 +35,22 @@ order by 1;
 
 
 
+-- routeless
+
+with t as (
+	select -1 x, -1 y union all
+	select 0, 0 union all
+	select -1, -2
+)
+select min(round(sqrt(power(b.x - a.x, 2) + power(b.y - a.y, 2))::numeric, 2)) distance from t a cross join t b
+where (a.x != b.x or a.y != b.y)
+
+-- distance|
+-- --------|
+--     1.00|
+
+
+
 -- ********************************************************************************************* --
 -- ********************************************************************************************* --
 
@@ -104,3 +120,4 @@ where a.student_id = b.student_id and b.silent order by 1;
 -- student_id|student_name|
 -- ----------|------------|
 --          2|Jade        |
+
